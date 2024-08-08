@@ -91,27 +91,34 @@ async def handler_InicioNombre(responseId: str, queryResult: Dict[str, Any]):
     # if it contains the cp we proceed with "cm_identified" event
     # if not we proceed with cp_notidentified
     try:
-        with await get_db_connection() as connection:
+        cp=queryResult['parameters']['cp_mexicano']
+
+
+        async with get_db_connection() as connection:
             with connection.cursor() as cursor:
-                cp = queryResult['parameters']['cp_mexicano']
-                values = (cp)
-                #Insert the data
-                cursor.execute("SELECT * FORM codigo_postal WHERE CP = %s", (values))
+                ## changing logic in DB queries using placeholders 
+                ## this is to avoid SQL injections
+                cursor.execute("SELECT * FROM codigo_postal WHERE cp = %s", (cp,))
                 result = cursor.fetchone()
-                print(result)
-                #Confirm the changes
-                return {
-                    "followupEventInput": {
-                        "name": "inicio-nombre",
-                        "parameters": {
-                            "cp_mexicano": cp
-                        },
-                        "languageCode": "en-US" 
+                ##
+                ##
+                if result:
+                    return {
+                        "followupEventInput": {
+                            "name": "cp_identified",
+                            "parameters": {},
+                            "languageCode": "en-US"
+                        }
+                    }
+
+                else:
+                    return {
+                        "followupEventInput": {
+                            "name": "cp_notidentified",
+                            "parameters": {},
+                            "languageCode": "en-US"
                     }
                 }
-
-        cursor.close()
-        connection.close()
-            
     except Exception as error:
-        return f"No pude conectarte a la base de datos error: {error}"
+        ## handling exceptions if prompting any error
+        return f"There was an error connecting to database: {error}"

@@ -1,0 +1,50 @@
+{
+  "responseId": "b7b750fc-493a-4fb2-98a5-6f57e980030c-792c6897",
+  "queryResult": {
+    "queryText": "David Castro",
+    "parameters": {
+      "nombre": "David Castro"
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            ""
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/atenci-n-cliente-superaki-vl9g/agent/sessions/f009afa4-6a82-37fc-2ae2-9f3d756666b2/contexts/inicio-nombre",
+        "parameters": {
+          "hola": "¡Hola!, soy AkiBot 🤖 y te ayudaré en lo que necesites.",
+          "hola.original": "Hola",
+          "nombre": "David Castro",
+          "nombre.original": "David Castro"
+        }
+      },
+      {
+        "name": "projects/atenci-n-cliente-superaki-vl9g/agent/sessions/f009afa4-6a82-37fc-2ae2-9f3d756666b2/contexts/_system_counters_",
+        "parameters": {
+          "no-input": 0,
+          "no-match": 0,
+          "nombre": "David Castro",
+          "nombre.original": "David Castro"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/atenci-n-cliente-superaki-vl9g/agent/intents/65be7366-839b-47f8-ac0e-b8cef32b5f34",
+      "displayName": "Inicio-Chat"
+    },
+    "intentDetectionConfidence": 0.54,
+    "languageCode": "es"
+  },
+  "originalDetectIntentRequest": {
+    "source": "DIALOGFLOW_CONSOLE",
+    "payload": {}
+  },
+  "session": "projects/atenci-n-cliente-superaki-vl9g/agent/sessions/f009afa4-6a82-37fc-2ae2-9f3d756666b2"
+}

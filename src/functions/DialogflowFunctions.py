@@ -97,29 +97,27 @@ async def handler_InicioNombre(responseId: str, queryResult: Dict[str, Any]):
                 cp = queryResult['parameters']['cp_mexicano']
                 values = (cp)
                 #Insert the data
-                cursor.execute("SELECT * FORM codigo_postal WHERE CP = %s", (values))
+                cursor.execute("SELECT * FROM codigo_postal WHERE cp = {0}".format(cp))
                 result = cursor.fetchone()
                 #Confirm the changes
-            if(result):
-                return {
-                    "followupEventInput": {
-                        "name": "cp_identified",
-                        "parameters": {
-                        },
-                        "languageCode": "en-US" 
+                if(result):
+                    return {
+                        "followupEventInput": {
+                            "name": "cp_identified",
+                            "parameters": {
+                            },
+                            "languageCode": "en-US" 
+                        }
                     }
-                }
-            else:
-                return {
-                    "followupEventInput": {
-                        "name": "cp_notidentified",
-                        "parameters": {
-                        },
-                        "languageCode": "en-US" 
+                else:
+                    return {
+                        "followupEventInput": {
+                            "name": "cp_notidentified",
+                            "parameters": {
+                            },
+                            "languageCode": "en-US" 
+                        }
                     }
-                }
-
-
         cursor.close()
         connection.close()
             

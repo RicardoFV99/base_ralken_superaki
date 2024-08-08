@@ -90,6 +90,7 @@ async def handler_InicioNombre(responseId: str, queryResult: Dict[str, Any]):
     # Here we check if the queryResult contains the CPMexicano
     # if it contains the cp we proceed with "cm_identified" event
     # if not we proceed with cp_notidentified
+
     try:
         with await get_db_connection() as connection:
             with connection.cursor() as cursor:
@@ -98,17 +99,26 @@ async def handler_InicioNombre(responseId: str, queryResult: Dict[str, Any]):
                 #Insert the data
                 cursor.execute("SELECT * FORM codigo_postal WHERE CP = %s", (values))
                 result = cursor.fetchone()
-                print(result)
                 #Confirm the changes
+            if(result):
                 return {
                     "followupEventInput": {
-                        "name": "inicio-nombre",
+                        "name": "cp_identified",
                         "parameters": {
-                            "cp_mexicano": cp
                         },
                         "languageCode": "en-US" 
                     }
                 }
+            else:
+                return {
+                    "followupEventInput": {
+                        "name": "cp_notidentified",
+                        "parameters": {
+                        },
+                        "languageCode": "en-US" 
+                    }
+                }
+
 
         cursor.close()
         connection.close()

@@ -11,6 +11,8 @@ async def capitalHumanoFunc(responseId: str, queryResult: Dict[str, Any]):
         return await handler_nameNotRelated(responseId, queryResult)
     if intent_name == 'Inicio-Nombre':
         return await handler_InicioNombre(responseId, queryResult)
+    if intent_name == 'proceso_seleccion':
+        return await handler_ProcesoSeleccion(responseId, queryResult)
     
     
 
@@ -121,5 +123,43 @@ async def handler_InicioNombre(responseId: str, queryResult: Dict[str, Any]):
         cursor.close()
         connection.close()
             
+    except Exception as error:
+        return f"No pude conectarte a la base de datos error: {error}"
+
+
+
+async def handler_ProcesoSeleccion(responseId: str, queryResult: Dict[str, Any]):
+    # Here we check in the queryResult the parameter "codigo_postulante"
+    # we query if it exists in the database, if exists we proceed to "proceso_identified"
+    # if not we proceed with "proceso_notidentified"
+    try:
+        codigo_postulante = queryResult["parameters"]["codigo_postulante"]
+        with await get_db_connection() as connection:
+            with connection.cursor() as cursor:
+                #query the data
+                cursor.execute("SELECT * FROM proceso_reclutamiento_prueba WHERE codigo_reclutamiento = '{0}'".format(codigo_postulante))
+                result = cursor.fetchone()
+                if(result):
+                    return {
+                        "followupEventInput": {
+                            "name": "proceso_identified",
+                            "parameters": {
+                                "nombre": result[1] + " " + result[2],
+                                "status_reclutamiento": result[3],
+                            },
+                            "languageCode": "en-US" 
+                        }
+                    }
+                else:
+                    return {
+                        "followupEventInput": {
+                            "name": "proceso_notidentified",
+                            "parameters": {
+                            },
+                            "languageCode": "en-US" 
+                        }
+                    }
+            cursor.close()
+            connection.close()    
     except Exception as error:
         return f"No pude conectarte a la base de datos error: {error}"
